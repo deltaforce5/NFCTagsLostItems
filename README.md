@@ -53,7 +53,7 @@ The database is used to provide the picture and the description of the tag. Crea
 If everything went fine, you are ready to store the info of your tags.
 
 Start taking a picture of the item the tag will be applied to, then edit the picture and scale it down to something around 320px for each side, then save it as jpg. Keep it small, there is no need for a FullHD picture, otherwise the website will take longer to render.
-Now convert the image to base64, if you don't know how to do it, just go to [https://www.base64-image.de/], drag the saved jpg over this webpage and wait for the encoding to complete. Once ready, click <code></> show code</code> button and <code>copy to clipboard</code> the first of the two long texts.
+Now convert the image to base64, if you don't know how to do it, just go to [https://www.base64-image.de/], drag the saved jpg over their webpage and wait for the encoding to complete. Once ready, click <code></> show code</code> button and <code>copy to clipboard</code> the first of the two long texts.
 
 Open the <code>add_tag_data.sql</code> in the <code>SQL</code> folder and paste the copied text in place of <code>YOUR_IMAGE_HERE</code>, then change <code>YOUR_DESCRIPTION_HERE</code> with the description of the item in the picture, <code>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</code> with the tag-key of the tag attached to the item and <code>XXXXXXXX</code> with the tag-id.
 

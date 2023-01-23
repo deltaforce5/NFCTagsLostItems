@@ -54,8 +54,8 @@ If everything went fine, you are ready to store the info of your tags.
 
 Start taking a picture of the item the tag will be applied to, then edit the picture and scale it down to something around 320px for each side, then save it as jpg. Keep it small, there is no need for a FullHD picture, otherwise the website will take longer to render.
 Now convert the image to base64. To do that you have at least two options:
-# if you are using Linux, run this command: <code>cat <(echo "data:image/png;base64,") <(base64 -w 0 tagXXXXXXXX.jpg; ) | tr -d '\n' > tagXXXXXXXX.bin </code> , replacing XXXXXXXX as usual. Open the .bin file with a text editor and copy the whole
-# if you don't know how to use the command line, just go to [https://www.base64-image.de/], drag the saved jpg over their webpage and wait for the encoding to complete. Once ready, click <code></> show code</code> button and <code>copy to clipboard</code> the first of the two long texts.
+1. if you are using Linux, run this command: <code>cat <(echo "data:image/png;base64,") <(base64 -w 0 tagXXXXXXXX.jpg; ) | tr -d '\n' > tagXXXXXXXX.bin </code> , replacing XXXXXXXX as usual. Open the .bin file with a text editor and copy the whole
+2. if you don't know how to use the command line, just go to [https://www.base64-image.de/], drag the saved jpg over their webpage and wait for the encoding to complete. Once ready, click <code></> show code</code> button and <code>copy to clipboard</code> the first of the two long texts.
 
 Open the <code>add_tag_data.sql</code> in the <code>SQL</code> folder and paste the copied text in place of <code>YOUR_IMAGE_HERE</code>, then change <code>YOUR_DESCRIPTION_HERE</code> with the description of the item in the picture, <code>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</code> with the tag-key of the tag attached to the item and <code>XXXXXXXX</code> with the tag-id.
 

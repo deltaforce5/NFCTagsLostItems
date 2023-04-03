@@ -30,7 +30,7 @@ Once the website is ready and available to the public, you can start programming
 - TagWriter by NXP (only for any tag from NXP)
 - NFC Tools PRO (this one is not free)
 
-Scan all the tags you are going to use, collecting their IDs (the serial number), we will identify them as <code>XXXXXXXX</code>. Now, for each one, generate a 64bytes long key using only number and characters in both upeercase and lowercase, to be HTTP compatible without recurring to encoding, we will identify them as <code>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</code>. You can shorten the key if the whole URL won't fit in your tags memory, just remember to change the table definition in database, reducing the keyid field size, when you are going to setup the SQL database.
+Scan all the tags you are going to use collecting their IDs (the serial number), we will identify them as <code>XXXXXXXX</code>. Now, for each one, generate a 64bytes long key using only number and characters in both upeercase and lowercase, to be HTTP compatible without recurring to encoding, we will identify them as <code>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</code>. You can shorten the key if the whole URL won't fit in your tags memory, just remember to change the table definition in database, reducing the keyid field size, when you are going to setup the SQL database.
 
 You are ready to write the tags! for each one store a "Link" or "URL/URI" type field with the following data, assuming you are going to use secure server only:
 - url type: https://
@@ -54,7 +54,10 @@ If everything went fine, you are ready to store the info of your tags.
 
 Start taking a picture of the item the tag will be applied to, then edit the picture and scale it down to something around 320px for each side, then save it as jpg. Keep it small, there is no need for a FullHD picture, otherwise the website will take longer to render.
 Now convert the image to base64. To do that you have at least two options:
-1. if you are using Linux, run this command: <code>cat <(echo "data:image/png;base64,") <(base64 -w 0 tagXXXXXXXX.jpg; ) | tr -d '\n' > tagXXXXXXXX.bin </code> , replacing XXXXXXXX as usual. Open the .bin file with a text editor and copy the whole
+1. if you are using Linux, run this command: 
+   - if it is a PNG picture: <code>cat <(echo "data:image/png;base64,") <(base64 -w 0 tagXXXXXXXX.png; ) | tr -d '\n' > tagXXXXXXXX.bin </code> 
+   - if it is a JPEG picture: <code>cat <(echo "data:image/jpeg;base64,") <(base64 -w 0 tagXXXXXXXX.jpg; ) | tr -d '\n' > tagXXXXXXXX.bin </code> 
+   replacing XXXXXXXX as usual. Open the .bin file with a text editor and copy the whole
 2. if you don't know how to use the command line, just go to [https://www.base64-image.de/], drag the saved jpg over their webpage and wait for the encoding to complete. Once ready, click <code></> show code</code> button and <code>copy to clipboard</code> the first of the two long texts.
 
 Open the <code>add_tag_data.sql</code> in the <code>SQL</code> folder and paste the copied text in place of <code>YOUR_IMAGE_HERE</code>, then change <code>YOUR_DESCRIPTION_HERE</code> with the description of the item in the picture, <code>YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY</code> with the tag-key of the tag attached to the item and <code>XXXXXXXX</code> with the tag-id.
@@ -69,8 +72,18 @@ You should repeat the process of programming the tag, taking the picture and rec
 
 If you need to update the image, the description or the tag-key of a tag, use the statements from the <code>update_tag_data.sql</code> file.
 
-
 ### Locking the tags
-This is a task you may have to complete after or while programming the tags, because if you don't lock the tags, they will can be erased and rewitten by anyone. This process is not the same for every NFC Tag and the protection they may offer is different, they can be password protected or just become read-only. If it the latter, please test your website carefully before locking the tag!!!
+This is a task you may have to complete after or while programming the tags, because if you don't lock the tags, anyone can erase and reuse them. This process is not the same for every NFC Tag and the protection they may offer is different, they can be password protected or just become read-only. If it the latter, please test your website carefully before locking the tag!!!
 
-I used some Mifare Classic that cannot be locked but can be password protected using the Mifare Classic Tool. The drawback was that I had to dump each tag, change the last twelve bytes of each sector (Sector 0 excluded as was not replaceable) with an hexadecimal key of my choice and the access bytes of each sector (again sector 0 excluded) to 787780 instead of 7F0788, which was the default, and then write the modified dump back into the tag memory. This makes the tag freely readable but it is password protected against write.
+I used some Mifare Classic that cannot be locked but can be password protected using the Mifare Classic Tool. The drawback was that I had to dump each tag, change the last twelve bytes of each sector with an hexadecimal key of my choice and the access bytes of each sector (sector 0 excluded) to 787780 instead of 7F0788, which was the default, and then write the modified dump back into the tag memory. This makes the tag freely readable but it is password protected against write.
+
+### Programming the tags
+To make the programming a bit faster on a batch of tags, I wrote a script that handles the writing of http/https NDEF Mifare Classic tags dumps with the desired values. To use it, first populate the database, then perform an export of the tItems table to a CSV file. The TagID must be in the first column and the TagKey in the second column.
+
+The script performs the customization of pre-defined templates, that are placed in the template/ folder. It generates two files for each tag:
+- a .mfd file: mifare classic dump
+- a .mct file: mifare classic tool (Android)
+
+use the script to generate one dump at time with the -i option or use the -f option to pass a list of tags to process. Run <code>./automfc.sh -h</code> to see all the available options.
+
+

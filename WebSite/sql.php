@@ -10,7 +10,7 @@ if (isset($_GET['t']) && isset($_GET['k'])) {
         $keyid = filter_var($_GET['k'], FILTER_SANITIZE_STRING);
 
 	// Create connection
-	$conn = new mysqli($servername, $username, $password, $dbname);
+	$conn = new mysqli($dbhost, $dbuser, $dbpass, $dbname);
 	// Check connection
 	if ($conn->connect_error) {
 	    die("Connection failed: " . $conn->connect_error);

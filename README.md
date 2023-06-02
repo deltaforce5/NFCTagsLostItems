@@ -52,7 +52,22 @@ The database is used to provide the picture and the description of the tag. Crea
 
 If everything went fine, you are ready to store the info of your tags.
 
-Start taking a picture of the item the tag will be applied to, then edit the picture and scale it down to something around 320px for each side, then save it as jpg. Keep it small, there is no need for a FullHD picture, otherwise the website will take longer to render.
+
+## Populating the database
+Start taking a picture of the item the tag will be applied to, then edit the picture and scale it down to something around 320px for each side, then save it as jpg. Keep it small, there is no need for a hi-resolution picture, otherwise the website will take longer to render.
+
+At this point you can add your tags using the website reserved area or by executing insert statements in the database.
+
+### by Website
+Login to the website pointing to the <code>login.php</code> page, if the tUsers table is empty the <code>authenticate.php</code> page will save the username and password you entered and you will have to login again.
+
+NOTE: use only https protocol, otherwise the password will can be retrieved sniffing the connection!
+
+Once logged in, you will see the <code>protected.php</page> with the list of the saved tags. The interface is pretty straightforward.
+There is no rights management, as it is not really meant to be used by many users.
+
+### by INSERT Statements
+
 Now convert the image to base64. To do that you have at least two options:
 1. if you are using Linux, run this command: 
    - if it is a PNG picture: <code>cat <(echo "data:image/png;base64,") <(base64 -w 0 tagXXXXXXXX.png; ) | tr -d '\n' > tagXXXXXXXX.bin </code> 
@@ -64,20 +79,14 @@ Open the <code>add_tag_data.sql</code> in the <code>SQL</code> folder and paste 
 
 Save the file and execute the statement with your database, you should be able to scan the tag and see the form with the picture and its description just above it.
 
-
-Everything is all set!
-
-
-You should repeat the process of programming the tag, taking the picture and record everything into the database, for each tag you want to use. If you do one step at time you can use more <code>INSERT INTO</code> statement at once in the <code>add_tag_data.sql</code> file.
-
 If you need to update the image, the description or the tag-key of a tag, use the statements from the <code>update_tag_data.sql</code> file.
 
-### Locking the tags
+## Locking the tags
 This is a task you may have to complete after or while programming the tags, because if you don't lock the tags, anyone can erase and reuse them. This process is not the same for every NFC Tag and the protection they may offer is different, they can be password protected or just become read-only. If it the latter, please test your website carefully before locking the tag!!!
 
 I used some Mifare Classic that cannot be locked but can be password protected using the Mifare Classic Tool. The drawback was that I had to dump each tag, change the last twelve bytes of each sector with an hexadecimal key of my choice and the access bytes of each sector (sector 0 excluded) to 787780 instead of 7F0788, which was the default, and then write the modified dump back into the tag memory. This makes the tag freely readable but it is password protected against write.
 
-### Programming the tags
+## Programming the tags
 To make the programming a bit faster on a batch of tags, I wrote a script that handles the writing of http/https NDEF Mifare Classic tags dumps with the desired values. To use it, first populate the database, then perform an export of the tItems table to a CSV file. The TagID must be in the first column and the TagKey in the second column.
 
 The script performs the customization of pre-defined templates, that are placed in the template/ folder. It generates two files for each tag:

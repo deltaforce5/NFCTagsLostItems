@@ -63,7 +63,7 @@ Login to the website pointing to the <code>login.php</code> page, if the tUsers 
 
 NOTE: use only https protocol, otherwise the password will can be retrieved sniffing the connection!
 
-Once logged in, you will see the <code>protected.php</page> with the list of the saved tags. The interface is pretty straightforward.
+Once logged in, you will see the <code>protected.php</code> with the list of the saved tags. The interface is pretty straightforward.
 There is no rights management, as it is not really meant to be used by many users.
 
 ### by INSERT Statements

@@ -54,11 +54,11 @@ if (mysqli_num_rows($result) == 1) {
         header('Location: protected.php');
     } else {
         // Password is incorrect, redirect back to login page
-        header('Location: login.php?error=invalid_password');
+        header('Location: login.php');
     }
 } else {
     // User not found, redirect back to login page
-    header('Location: login.php?error=user_not_found');
+    header('Location: login.php');
 }
 
 // Close database connection
